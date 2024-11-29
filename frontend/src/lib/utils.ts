@@ -75,3 +75,20 @@ export function flattenAttributes(data: any): any {
 
   return flattened;
 }
+
+export function getStrapiURL() {
+  return process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1337';
+}
+
+/**
+ * Returns the full URL for a given media URL from Strapi.
+ *
+ * @param {string | null} url - The media URL to process.
+ * @returns {string | null} - The full URL if the input is a relative URL, or the original URL if it is already a full URL or a data URL. Returns null if the input is null.
+ */
+export function getStrapiMedia(url: string | null) {
+  if (url == null) return null;
+  if (url.startsWith('data:')) return url;
+  if (url.startsWith('http') || url.startsWith('//')) return url;
+  return `${getStrapiURL()}${url}`;
+}
