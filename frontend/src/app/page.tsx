@@ -1,51 +1,22 @@
-import qs from 'qs';
-import { flattenAttributes } from '@/lib/utils';
-import { HeroSection } from '@/components/custom/HeroSection';
+import { getHomePageData } from '@/data/loaders';
 
-const homePageQuery = qs.stringify({
-  populate: {
-    blocks: {
-      on: {
-        'layout.hero-section': {
-          populate: {
-            image: {
-              fields: ['url', 'alternativeText'],
-            },
-            link: {
-              populate: true,
-            },
-          },
-        },
-      },
-    },
-  },
-});
+import { HeroSection } from '@/components/custom/hero-section';
+import { FeatureSection } from '@/components/custom/features-section';
 
-async function getStrapiData(path: string) {
-  const baseUrl = 'http://localhost:1337';
+const blockComponents = {
+  'layout.hero-section': HeroSection,
+  'layout.features-section': FeatureSection,
+};
 
-  const url = new URL(path, baseUrl);
-  url.search = homePageQuery;
-  console.log(url.href);
-
-  try {
-    // Might not need { cache: 'no-store' } this changed in version 15, to a default of cache: no-store.
-    const response = await fetch(url.href, { cache: 'no-store' });
-    const data = await response.json();
-    const flattenedData = flattenAttributes(data);
-    console.dir(flattenedData, { depth: null });
-    return flattenedData;
-  } catch (error) {
-    console.error(error);
-  }
+function blockRenderer(block: any) {
+  const Component =
+    blockComponents[block.__component as keyof typeof blockComponents];
+  return Component ? <Component key={block.id} data={block} /> : null;
 }
 
 export default async function Home() {
-  const strapiData = await getStrapiData('/api/home-page');
-  const { title, description, blocks } = strapiData;
-  return (
-    <main>
-      <HeroSection data={blocks[0]} />
-    </main>
-  );
+  const strapiData = await getHomePageData();
+  console.dir(strapiData, { depth: null });
+  const { blocks } = strapiData?.data || [];
+  return <main>{blocks.map(blockRenderer)}</main>;
 }
