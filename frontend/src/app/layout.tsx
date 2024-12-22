@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { getGlobalData } from '@/data/loaders';
+import { Header } from '@/components/custom/header';
+import { Footer } from '@/components/custom/footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -18,17 +21,20 @@ export const metadata: Metadata = {
 };
 
 // suppressHydrationWarning added to fix a bug with next15 on darkmode
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const globalData = await getGlobalData();
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Header data={globalData.data.header} />
+        <div>{children}</div>
+        <Footer data={globalData.data.footer} />
       </body>
     </html>
   );
