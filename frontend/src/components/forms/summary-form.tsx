@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { SubmitButton } from '@/components/custom/submit-button';
 import { generateSummaryService } from '@/data/services/summary-service';
+import { extractYouTubeID } from '@/lib/utils';
 
 interface StrapiErrorsProps {
   message: string | null;
@@ -30,10 +31,39 @@ export function SummaryForm() {
     const formData = new FormData(event.currentTarget);
     const videoId = formData.get('videoId') as string;
 
-    const summaryResponseData = await generateSummaryService(videoId);
-    console.log('SUMMARY RESPONSE DATA:', summaryResponseData);
+    const processedVideoId = extractYouTubeID(videoId);
 
-    toast.success('Summary Created');
+    if (!processedVideoId) {
+      toast.error('Invalid Youtube Video ID');
+      setLoading(false);
+      setValue('');
+      setError({
+        ...INITIAL_STATE,
+        message: 'Invalid Youtube Video ID',
+        name: 'Invalid Id',
+      });
+      return;
+    }
+
+    toast.success('Generating Summary');
+
+    const summaryResponseData = await generateSummaryService(processedVideoId);
+    console.log(summaryResponseData, 'Response from route handler');
+
+    if (summaryResponseData.error) {
+      setValue('');
+      toast.error(summaryResponseData.error);
+      setError({
+        ...INITIAL_STATE,
+        message: summaryResponseData.error,
+        name: 'Summary Error',
+      });
+
+      setLoading(false);
+      return;
+    }
+
+    toast.success('Testing Toast');
     setLoading(false);
   }
 
