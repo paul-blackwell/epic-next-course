@@ -32,13 +32,13 @@ export function extractYouTubeID(urlOrID: string): string | null {
   const regExpShorts = /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/;
 
   // Check for standard YouTube link
-  const matchStandard = urlOrID.match(regExpStandard);
+  const matchStandard = urlOrID?.match(regExpStandard);
   if (matchStandard) {
     return matchStandard[1];
   }
 
   // Check for YouTube Shorts link
-  const matchShorts = urlOrID.match(regExpShorts);
+  const matchShorts = urlOrID?.match(regExpShorts);
   if (matchShorts) {
     return matchShorts[1];
   }
