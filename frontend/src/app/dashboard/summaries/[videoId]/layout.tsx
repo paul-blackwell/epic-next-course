@@ -1,6 +1,7 @@
 import { extractYouTubeID } from '@/lib/utils';
 import { getSummaryById } from '@/data/loaders';
 import ClientYouTubePlayer from '@/components/custom/client-youtube-player';
+import { notFound } from 'next/navigation';
 
 export default async function SummarySingleRoute({
   params,
@@ -11,7 +12,7 @@ export default async function SummarySingleRoute({
 }) {
   const { videoId } = await params;
   const data = await getSummaryById(videoId);
-  if (data?.error?.status === 404) return <p>No Items Found</p>;
+  if (data?.error?.status === 404) return notFound();
   const videoYTId = extractYouTubeID(data.data.videoId);
 
   return (
