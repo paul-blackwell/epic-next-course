@@ -31,8 +31,6 @@ export function SignupForm() {
     INITIAL_STATE
   );
 
-  console.log(formState);
-
   return (
     <div className="w-full max-w-md">
       <form action={formAction}>
