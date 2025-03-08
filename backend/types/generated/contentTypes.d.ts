@@ -437,6 +437,7 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
 export interface ApiSummarySummary extends Struct.CollectionTypeSchema {
   collectionName: 'summaries';
   info: {
+    description: '';
     displayName: 'Summary';
     pluralName: 'summaries';
     singularName: 'summary';
@@ -445,6 +446,7 @@ export interface ApiSummarySummary extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    authorId: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -460,10 +462,6 @@ export interface ApiSummarySummary extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
     videoId: Schema.Attribute.String;
   };
 }
@@ -959,7 +957,6 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    summaries: Schema.Attribute.Relation<'oneToMany', 'api::summary.summary'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

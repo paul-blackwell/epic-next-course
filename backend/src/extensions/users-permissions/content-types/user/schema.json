@@ -84,12 +84,6 @@
       ],
       "type": "media",
       "multiple": false
-    },
-    "summaries": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::summary.summary",
-      "mappedBy": "user"
     }
   }
 }
